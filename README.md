@@ -323,7 +323,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- **Documentation**: [YARP Documentation](https://docs.regmi.dev/yarp) (coming soon)
+- **Documentation**: [YARP Documentation](https://docs.regmi.dev/yarp)
 - **Issues**: [GitHub Issues](https://github.com/regmibijay/yarp/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/regmibijay/yarp/discussions)
 - **My Blog**: [Blog](https://blog.regmi.dev)
