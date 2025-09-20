@@ -5,6 +5,7 @@ on:
     branches: [ master, main ]
   pull_request:
     branches: [ master, main ]
+    types: [opened, synchronize, reopened]
   workflow_dispatch:
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
@@ -60,9 +61,9 @@ jobs:
       with:
         path: docs/build
 
-  # Deploy to GitHub Pages (only on pushes to master/main)
+  # Deploy to GitHub Pages (only on pushes to master/main from main repo)
   deploy:
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') && github.repository == 'regmibijay/yarp'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

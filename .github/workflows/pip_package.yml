@@ -1,19 +1,19 @@
 name: Build and Publish to PyPI
 
+# Default permissions - restrict everything by default
+permissions:
+  contents: read
+
 on:
   release:
     types: [published]
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (if different from pyproject.toml)'
-        required: false
-        type: string
 
 jobs:
   build:
     name: Build distribution 📦
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Only read access needed for checkout
 
     steps:
     - uses: actions/checkout@v4
@@ -28,13 +28,6 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install build
 
-    - name: Update version if provided
-      if: github.event.inputs.version != ''
-      run: |
-        # Update version in pyproject.toml
-        sed -i 's/version = "[^"]*"/version = "${{ github.event.inputs.version }}"/' pyproject.toml
-        echo "Updated version to ${{ github.event.inputs.version }}"
-    
     - name: Build a binary wheel and a source tarball
       run: python -m build
     
@@ -46,10 +39,11 @@ jobs:
 
   publish-to-pypi:
     name: Publish Python 🐍 distribution 📦 to PyPI
-    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'release'
     needs:
     - build
     runs-on: ubuntu-latest
+    environment: pypi-publish
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
