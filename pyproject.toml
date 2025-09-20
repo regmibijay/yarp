@@ -1,0 +1,52 @@
+[project]
+name = "yarp"
+version = "0.1.0"
+description = "Yet Another RAG Pipeline(YARP) with strong focus on In Memory Vector DB with ANN"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "annoy>=1.17.3",
+    "levenshtein>=0.27.1",
+    "numpy>=2.3.3",
+    "pydantic>=2.11.9",
+    "sentence-transformers>=5.1.0",
+]
+
+[dependency-groups]
+dev = [
+    "black>=25.9.0",
+    "coverage>=7.10.6",
+    "psutil>=7.1.0",
+    "pytest>=8.4.2",
+    "pytest-cov>=7.0.0",
+    "ruff>=0.13.1",
+]
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--cov=yarp",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-fail-under=10",
+    "-v"
+]
+
+[tool.coverage.run]
+source = ["yarp"]
+omit = [
+    "*/tests/*",
+    "*/test_*",
+    "*/__init__.py"
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise AssertionError",
+    "raise NotImplementedError"
+]
