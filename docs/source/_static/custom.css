@@ -1,0 +1,34 @@
+/* Custom CSS for YARP documentation */
+
+/* Improve code block readability */
+.highlight {
+    background-color: #f8f9fa;
+    border: 1px solid #e1e4e8;
+    border-radius: 6px;
+}
+
+/* Better spacing for API documentation */
+.py.class > dt {
+    margin-top: 1.5em;
+}
+
+.py.method > dt {
+    margin-top: 1em;
+}
+
+/* Enhance note and warning boxes */
+.admonition {
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Style for parameter lists */
+.field-list th {
+    background-color: #f1f3f4;
+    padding: 8px;
+    font-weight: bold;
+}
+
+.field-list td {
+    padding: 8px;
+}

@@ -1,8 +1,7 @@
 # YARP - Yet Another RAG Pipeline
 
-[![Python](https://img.shields.io/badge/python-3.12%2B-blue.svg)](https://www.python.org/downloads/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
-[![Tests](https://img.shields.io/badge/tests-passing-brightgreen.svg)](tests/)
+[![Documentation](https://img.shields.io/badge/docs-github%20pages-blue)](https://regmibijay.github.io/yarp/)
+
 
 **YARP** (Yet Another RAG Pipeline) is a lightweight, high-performance Python library focused on **in-memory vector database operations** with **Approximate Nearest Neighbor (ANN) search**. Built for fast document similarity search and retrieval-augmented generation (RAG) applications.
 
@@ -19,7 +18,7 @@
 ## 📦 Installation
 
 ```bash
-pip install yarp
+pip install python-yarp
 ```
 
 ### Development Installation

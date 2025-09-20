@@ -1,24 +1,77 @@
+"""
+Local vector index implementation for YARP.
+
+This module provides the core LocalMemoryIndex class that enables fast semantic
+search over document collections using sentence transformers and approximate
+nearest neighbor search via the Annoy library.
+
+Key Features:
+- Hybrid search combining semantic and string similarity
+- Persistent storage and loading of indexes
+- Dynamic document addition and removal
+- Configurable search parameters for accuracy/speed tradeoffs
+
+Example:
+    Basic usage of the LocalMemoryIndex:
+    
+    >>> from yarp.vector_index import LocalMemoryIndex
+    >>> documents = ["Python programming", "Machine learning", "Data science"]
+    >>> index = LocalMemoryIndex(documents)
+    >>> index.process()
+    >>> results = index.query("programming languages")
+    >>> print(f"Best match: {results.results[0].document}")
+"""
 import os
 import pickle
-from typing import List, Generator, Tuple
-from sentence_transformers import SentenceTransformer
-from annoy import AnnoyIndex
+from collections.abc import Generator
+from typing import List
+from typing import Tuple
+
 import Levenshtein
-
 import numpy as np
-
-from yarp.exceptions import LocalMemoryTreeNotBuildException
+from annoy import AnnoyIndex
+from sentence_transformers import SentenceTransformer
 from yarp.exceptions import LocalMemoryBadRequestException
-from yarp.models import LocalMemorySearchResult, LocalMemorySearchResultEntry
+from yarp.exceptions import LocalMemoryTreeNotBuildException
+from yarp.models import LocalMemorySearchResult
+from yarp.models import LocalMemorySearchResultEntry
 
 
 class LocalMemoryIndex:
+    """
+    A local in-memory vector index for semantic document search using
+    sentence embeddings.
+
+    This class provides fast similarity search capabilities by combining
+    semantic similarity (using sentence transformers) with string similarity
+    (using Levenshtein distance). It uses the Annoy library for efficient
+    approximate nearest neighbor search.
+
+    Attributes:
+        _num_trees (int): Number of trees to build in the Annoy index.
+            More trees give better accuracy but slower build time. Default is 128.
+        _metrics_type (str): Distance metric for the Annoy index. 'angular'
+            uses cosine similarity, which works well for normalized embeddings.
+    """
+
     _num_trees: int = 128
     _metrics_type: str = "angular"
 
     def __init__(self, documents: List[str], model_name: str = "all-MiniLM-L6-v2"):
         """
-        Initialize with a list of documents and an embedding model.
+        Initialize the vector index with a collection of documents.
+
+        Args:
+            documents (List[str]): List of text documents to index.
+                Each document should be a string that will be converted to
+                vector embeddings.
+            model_name (str, optional): Name of the sentence transformer model
+                to use for creating embeddings. Defaults to 'all-MiniLM-L6-v2',
+                which provides a good balance of speed and quality.
+
+        Note:
+            The index is not immediately ready for search after initialization.
+            You must call process() to build the search index.
         """
         self.documents = documents
         self.model = SentenceTransformer(model_name)
@@ -27,7 +80,13 @@ class LocalMemoryIndex:
         self.dim = None
 
     def _build_trees(self):
-        """Build Annoy index with specified number of trees."""
+        """
+        Build the Annoy index with the specified number of trees.
+
+        This is an internal method that constructs the search index from
+        the document embeddings. More trees provide better search accuracy
+        but require more memory and build time.
+        """
         self.annoy_index = AnnoyIndex(self.dim, self._metrics_type)
         for i, emb in enumerate(self.embeddings):
             self.annoy_index.add_item(i, emb.tolist())
@@ -35,7 +94,17 @@ class LocalMemoryIndex:
 
     def process(self, num_trees: int = 128, metrics_type: str = "angular"):
         """
-        Embed documents and build Annoy index using cosine similarity (angular metric).
+        Convert documents to embeddings and build the searchable index.
+
+        This method must be called before you can search the index. It:
+        1. Converts all documents to vector embeddings using the transformer model
+        2. Builds an Annoy index for fast approximate nearest neighbor search
+
+        Args:
+            num_trees (int, optional): Number of trees for the Annoy index.
+                More trees = better accuracy but slower builds. Defaults to 128.
+            metrics_type (str, optional): Distance metric to use.
+                'angular' uses cosine similarity (recommended). Defaults to "angular".
         """
         self._num_trees = num_trees
         self._metrics_type = metrics_type
@@ -45,7 +114,20 @@ class LocalMemoryIndex:
 
     def add(self, documents: str | list[str]) -> None:
         """
-        Add new documents to the index. Rebuilds the index.
+        Add new documents to the index and rebuild it.
+
+        This method extends the existing document collection with new documents,
+        computes their embeddings, and rebuilds the entire search index to
+        include the new content.
+
+        Args:
+            documents (str | list[str]): Either a single document string or
+                a list of document strings to add to the index.
+
+        Note:
+            Adding documents requires rebuilding the entire index, which can
+            be time-consuming for large collections. Consider batch adding
+            multiple documents at once for better performance.
         """
         if isinstance(documents, str):
             documents = [documents]
@@ -61,7 +143,24 @@ class LocalMemoryIndex:
 
     def delete(self, document: str) -> None:
         """
-        Delete a document from the index. Rebuilds the index.
+        Remove a document from the index and rebuild it.
+
+        This method removes the specified document from the collection
+        and rebuilds the search index. If the document is not found,
+        it raises an exception.
+
+        Args:
+            document (str): The exact document text to remove from the index.
+                Must match exactly with one of the indexed documents.
+
+        Raises:
+            LocalMemoryBadRequestException: If the document is not found
+                in the index.
+
+        Note:
+            Removing documents requires rebuilding the entire index.
+            If you remove all documents, the index becomes empty and
+            unusable until new documents are added.
         """
         if document not in self.documents:
             raise LocalMemoryBadRequestException("Document not found in index")
@@ -85,9 +184,41 @@ class LocalMemoryIndex:
         search_k: int = 50,
     ) -> Generator[Tuple[str, float], None, None]:
         """
-        Query the index with a hybrid score:
-        match_score = weighted combination of cosine similarity and Levenshtein similarity
-        Returns match_score as a percentage (0–100).
+        Search the index for documents similar to the query text.
+
+        This method combines semantic similarity (based on meaning) with
+        string similarity (based on character differences) to find the most
+        relevant documents. The final score is a weighted combination of both.
+
+        Args:
+            q (str): The search query text to find similar documents for.
+            top_k (int, optional): Maximum number of results to return.
+                Defaults to 5.
+            weight_semantic (float, optional): Weight for semantic similarity
+                (0.0 to 1.0). Higher values prioritize meaning over exact
+                text matching. Defaults to 0.5.
+            weight_levenshtein (float, optional): Weight for string similarity
+                (0.0 to 1.0). Higher values prioritize exact text matching.
+                Defaults to 0.5.
+            search_k (int, optional): Number of candidates to examine during
+                the initial search phase. Higher values = better accuracy but
+                slower search. Defaults to 50.
+
+        Returns:
+            LocalMemorySearchResult: A container with search results sorted by
+                relevance score (0-100, where 100 is perfect match).
+
+        Raises:
+            LocalMemoryTreeNotBuildException: If the index hasn't been built
+                yet. Call process() first.
+            LocalMemoryBadRequestException: If the weights don't sum to 1.0.
+
+        Example:
+            >>> index = LocalMemoryIndex(["Hello world", "Python programming"])
+            >>> index.process()
+            >>> results = index.query("programming languages", top_k=1)
+            >>> for result in results:
+            ...     print(f"Doc: {result.document}, Score: {result.matching_score}")
         """
         if self.annoy_index is None or self.embeddings is None:
             raise LocalMemoryTreeNotBuildException("Index not built")
@@ -132,7 +263,26 @@ class LocalMemoryIndex:
 
     def backup(self, path: str):
         """
-        Save Annoy index and metadata to disk.
+        Save the index to disk for later reuse.
+
+        This method persists both the Annoy search index and the metadata
+        (documents, embeddings info, model details) to the specified directory.
+        This allows you to reload the index later without rebuilding it.
+
+        Args:
+            path (str): Directory path where the index files will be saved.
+                The directory will be created if it doesn't exist.
+
+        Raises:
+            LocalMemoryTreeNotBuildException: If the index hasn't been built
+                yet. Call process() first.
+
+        Files Created:
+            - annoy_index.ann: The binary Annoy index file
+            - metadata.pkl: Pickled metadata including documents and settings
+
+        Example:
+            >>> index.backup("/path/to/save/location")
         """
         if self.annoy_index is None:
             raise LocalMemoryTreeNotBuildException(
@@ -159,7 +309,29 @@ class LocalMemoryIndex:
     @classmethod
     def load(cls, path: str, model_name: str = "all-MiniLM-L6-v2"):
         """
-        Load index and metadata from disk.
+        Load a previously saved index from disk.
+
+        This class method creates a new LocalMemoryIndex instance from
+        files saved using the backup() method. This is much faster than
+        rebuilding the index from scratch.
+
+        Args:
+            path (str): Directory path containing the saved index files.
+                Should contain 'annoy_index.ann' and 'metadata.pkl'.
+            model_name (str, optional): Name of the sentence transformer
+                model to use. Should match the model used when creating
+                the original index. Defaults to 'all-MiniLM-L6-v2'.
+
+        Returns:
+            LocalMemoryIndex: A fully loaded and ready-to-use index instance.
+
+        Raises:
+            FileNotFoundError: If the required index files are not found
+                in the specified path.
+
+        Example:
+            >>> index = LocalMemoryIndex.load("/path/to/saved/index")
+            >>> results = index.query("search text")
         """
         meta_path = os.path.join(path, "metadata.pkl")
         index_path = os.path.join(path, "annoy_index.ann")
