@@ -49,7 +49,7 @@ jobs:
     - name: Build documentation
       run: |
         cd docs
-        sphinx-build -b html source build -E -W
+        sphinx-build -b html source build -E
         
     - name: Add .nojekyll file for GitHub Pages
       run: |

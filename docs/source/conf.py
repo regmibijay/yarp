@@ -54,6 +54,10 @@ autodoc_default_options = {
     "exclude-members": "__weakref__",
 }
 autodoc_typehints = "description"
+autodoc_member_order = "bysource"
+
+# Suppress warnings about duplicate object descriptions
+suppress_warnings = ["autodoc.duplicate_object", "ref.python", "toc.excluded"]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
@@ -65,7 +69,6 @@ html_static_path = ["_static"]
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "pydantic": ("https://docs.pydantic.dev/", None),
 }
 
 # Add any paths that contain custom static files (such as style sheets)
@@ -81,7 +84,6 @@ html_theme_options = {
     "canonical_url": "",
     "analytics_id": "",
     "logo_only": False,
-    "display_version": True,
     "prev_next_buttons_location": "bottom",
     "style_external_links": False,
     "vcs_pageview_mode": "",

@@ -59,10 +59,7 @@ Install YARP using pip:
 API Reference
 =============
 
-.. toctree::
-   :maxdepth: 2
-
-   api
+The complete API documentation is available in the API section above.
 
 Indices and tables
 ==================
