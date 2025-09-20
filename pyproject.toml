@@ -1,5 +1,5 @@
 [project]
-name = "yarp"
+name = "python-yarp"
 version = "0.1.0"
 description = "Yet Another RAG Pipeline(YARP) with strong focus on In Memory Vector DB with ANN"
 readme = "README.md"
