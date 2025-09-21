@@ -12,7 +12,7 @@ sys.path.insert(0, os.path.abspath("../../"))
 project = "YARP"
 copyright = "2025, YARP Contributors"
 author = "YARP Contributors"
-release = "0.3.1"
+release = "0.3.2"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
