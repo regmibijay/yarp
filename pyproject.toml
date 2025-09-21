@@ -4,6 +4,9 @@ version = "0.1.1"
 description = "Yet Another RAG Pipeline(YARP) with strong focus on In Memory Vector DB with ANN"
 readme = "README.md"
 requires-python = ">=3.12"
+authors = [
+    {name = "Bijay Regmi", email = "bijay@regmi.dev"}
+]
 dependencies = [
     "annoy>=1.17.3",
     "levenshtein>=0.27.1",
@@ -11,6 +14,12 @@ dependencies = [
     "pydantic>=2.11.9",
     "sentence-transformers>=5.1.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/regmibijay/yarp"
+Documentation = "https://github.io/regmibijay/yarp"
+Repository = "https://github.com/regmibijay/yarp"
+"Author Blog" = "https://blog.regmi.dev"
 
 [dependency-groups]
 dev = [
