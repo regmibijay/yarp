@@ -96,5 +96,14 @@ html_theme_options = {
     "titles_only": False,
 }
 
+# GitHub integration for "View page source" links
+html_context = {
+    "display_github": True,
+    "github_user": "regmibijay",
+    "github_repo": "yarp",
+    "github_version": "master",
+    "conf_py_path": "/docs/source/",
+}
+
 # Output file base name for HTML help builder.
 htmlhelp_basename = "YARPdoc"
