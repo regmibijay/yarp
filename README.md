@@ -312,7 +312,7 @@ cd yarp
 uv sync --dev
 
 # For CPU-only development environments (optional)
-# uv sync --dev --group cpu
+# uv sync --dev --extra cpu
 
 # Install pre-commit hooks
 uv run pre-commit install
