@@ -1,6 +1,6 @@
 [project]
 name = "python-yarp"
-version = "0.3.1"
+version = "0.3.2"
 description = "Yet Another RAG Pipeline(YARP) with strong focus on In Memory Vector DB with ANN"
 readme = "README.md"
 requires-python = ">=3.12"
