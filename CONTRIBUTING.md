@@ -68,7 +68,7 @@ uv sync --dev
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 ```
 
-#### Using pip
+#### Using pip (Legacy)
 
 ```bash
 # Create virtual environment
@@ -77,32 +77,35 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install package in development mode with dev dependencies
 pip install -e ".[dev]"
+
+# For CPU-only development environments (optional)
+# pip install -e ".[dev,cpu]"
 ```
 
 ### 3. Verify Installation
 
 ```bash
 # Run tests to ensure everything works
-pytest
+uv run pytest
 
 # Check code formatting
-ruff check .
+uv run ruff check .
 
 # Verify the package can be imported
-python -c "from yarp import LocalMemoryIndex; print('✅ Installation successful!')"
+uv run python -c "from yarp import LocalMemoryIndex; print('✅ Installation successful!')"
 ```
 
 ### 4. Pre-commit Hooks (Optional but Recommended)
 
 ```bash
 # Install pre-commit
-pip install pre-commit
+uv add --dev pre-commit
 
 # Set up pre-commit hooks
-pre-commit install
+uv run pre-commit install
 
 # Test the hooks
-pre-commit run --all-files
+uv run pre-commit run --all-files
 ```
 
 ## 🔧 Making Changes
