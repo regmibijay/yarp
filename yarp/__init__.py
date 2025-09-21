@@ -5,4 +5,4 @@ with a strong focus on in-memory vector databases and Approximate Nearest
 Neighbors.
 """
 
-__version__ = "0.2.0"
+__version__ = "0.2.1"
