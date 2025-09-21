@@ -1,31 +1,31 @@
 import pytest
-from yarp.exceptions.local_memory_exceptions import BaseLocalMemoryError
+from yarp.exceptions.base import YarpBaseException
 from yarp.exceptions.local_memory_exceptions import LocalMemoryBadRequestException
 from yarp.exceptions.local_memory_exceptions import LocalMemoryTreeNotBuildException
 
 
-class TestBaseLocalMemoryError:
+class TestYarpBaseException:
     """Test the base exception class."""
 
     def test_base_exception_creation(self):
         """Test creating base exception."""
-        error = BaseLocalMemoryError("Base error message")
+        error = YarpBaseException("Base error message")
         assert str(error) == "Base error message"
         assert isinstance(error, Exception)
 
     def test_base_exception_inheritance(self):
         """Test that base exception inherits from Exception."""
-        error = BaseLocalMemoryError()
+        error = YarpBaseException()
         assert isinstance(error, Exception)
 
     def test_base_exception_empty_message(self):
         """Test creating base exception with empty message."""
-        error = BaseLocalMemoryError("")
+        error = YarpBaseException("")
         assert str(error) == ""
 
     def test_base_exception_no_message(self):
         """Test creating base exception without message."""
-        error = BaseLocalMemoryError()
+        error = YarpBaseException()
         assert str(error) == ""
 
 
@@ -36,13 +36,13 @@ class TestLocalMemoryBadRequestException:
         """Test creating bad request exception."""
         error = LocalMemoryBadRequestException("Bad request")
         assert str(error) == "Bad request"
-        assert isinstance(error, BaseLocalMemoryError)
+        assert isinstance(error, YarpBaseException)
         assert isinstance(error, Exception)
 
     def test_bad_request_exception_inheritance(self):
         """Test inheritance chain."""
         error = LocalMemoryBadRequestException()
-        assert isinstance(error, BaseLocalMemoryError)
+        assert isinstance(error, YarpBaseException)
         assert isinstance(error, Exception)
 
     def test_bad_request_exception_raise(self):
@@ -53,7 +53,7 @@ class TestLocalMemoryBadRequestException:
 
     def test_bad_request_exception_catch_as_base(self):
         """Test catching as base exception."""
-        with pytest.raises(BaseLocalMemoryError):
+        with pytest.raises(YarpBaseException):
             raise LocalMemoryBadRequestException("Test error")
 
     def test_bad_request_exception_with_detailed_message(self):
@@ -70,13 +70,13 @@ class TestLocalMemoryTreeNotBuildException:
         """Test creating tree not built exception."""
         error = LocalMemoryTreeNotBuildException("Tree not built")
         assert str(error) == "Tree not built"
-        assert isinstance(error, BaseLocalMemoryError)
+        assert isinstance(error, YarpBaseException)
         assert isinstance(error, Exception)
 
     def test_tree_not_built_exception_inheritance(self):
         """Test inheritance chain."""
         error = LocalMemoryTreeNotBuildException()
-        assert isinstance(error, BaseLocalMemoryError)
+        assert isinstance(error, YarpBaseException)
         assert isinstance(error, Exception)
 
     def test_tree_not_built_exception_raise(self):
@@ -87,7 +87,7 @@ class TestLocalMemoryTreeNotBuildException:
 
     def test_tree_not_built_exception_catch_as_base(self):
         """Test catching as base exception."""
-        with pytest.raises(BaseLocalMemoryError):
+        with pytest.raises(YarpBaseException):
             raise LocalMemoryTreeNotBuildException("Test error")
 
     def test_tree_not_built_exception_with_detailed_message(self):
@@ -116,13 +116,13 @@ class TestExceptionInteractions:
         # Test LocalMemoryBadRequestException
         try:
             raise LocalMemoryBadRequestException("Bad request")
-        except BaseLocalMemoryError as e:
+        except YarpBaseException as e:
             exceptions_caught.append(type(e).__name__)
 
         # Test LocalMemoryTreeNotBuildException
         try:
             raise LocalMemoryTreeNotBuildException("Not built")
-        except BaseLocalMemoryError as e:
+        except YarpBaseException as e:
             exceptions_caught.append(type(e).__name__)
 
         assert "LocalMemoryBadRequestException" in exceptions_caught

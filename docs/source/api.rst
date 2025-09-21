@@ -23,7 +23,19 @@ Data Models
 Exceptions
 ----------
 
+.. automodule:: yarp.exceptions.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: yarp.exceptions.runtime
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 .. automodule:: yarp.exceptions.local_memory_exceptions
    :members:
    :undoc-members:
    :show-inheritance:
+
+YARP exceptions are unified under ``YarpBaseException`` for easier error handling. Runtime errors such as missing embedding providers will raise ``EmbeddingProviderNotFoundException``.

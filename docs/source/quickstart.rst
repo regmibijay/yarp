@@ -113,6 +113,9 @@ YARP uses sentence transformer models for embeddings. You can choose different m
 Error Handling
 --------------
 
+
+YARP performs preflight checks for required packages at import time. If a required package is missing, you will see a clear error message.
+
 YARP provides specific exceptions to help you handle errors gracefully:
 
 .. code-block:: python
@@ -121,6 +124,7 @@ YARP provides specific exceptions to help you handle errors gracefully:
         LocalMemoryTreeNotBuildException,
         LocalMemoryBadRequestException
     )
+    from yarp.exceptions.runtime import EmbeddingProviderNotFoundException
 
     try:
         # This will fail if index isn't built
@@ -129,12 +133,19 @@ YARP provides specific exceptions to help you handle errors gracefully:
         print("You need to call index.process() first!")
         index.process()
         results = index.query("test")
-    
+
     try:
         # This will fail if weights don't sum to 1.0
         results = index.query("test", weight_semantic=0.3, weight_levenshtein=0.4)
     except LocalMemoryBadRequestException as e:
         print(f"Invalid parameters: {e}")
+
+    try:
+        # This will fail if embedding provider is missing
+        index = LocalMemoryIndex(["Hello world"])
+        index.process()
+    except EmbeddingProviderNotFoundException as e:
+        print(f"Missing dependency: {e}")
 
 Next Steps
 ----------

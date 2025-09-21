@@ -184,12 +184,6 @@ class TestPerformance:
         assert backup_time < 10, f"Backup too slow: {backup_time:.2f}s"
         assert load_time < 10, f"Load too slow: {load_time:.2f}s"
 
-        return {
-            "backup_time": backup_time,
-            "load_time": load_time,
-            "doc_count": len(docs),
-        }
-
     def test_memory_usage_patterns(self):
         """Test memory usage doesn't grow excessively."""
         import psutil
@@ -223,14 +217,7 @@ class TestPerformance:
         # Clean up indices
         del indices
 
-        final_memory = process.memory_info().rss
-
-        return {
-            "initial_memory_mb": initial_memory / 1024 / 1024,
-            "peak_memory_mb": after_creation_memory / 1024 / 1024,
-            "final_memory_mb": final_memory / 1024 / 1024,
-            "memory_increase_mb": memory_increase / 1024 / 1024,
-        }
+        process.memory_info().rss
 
     def test_concurrent_query_performance(self):
         """Test performance with multiple concurrent queries."""
@@ -294,12 +281,6 @@ class TestPerformance:
                 result["mean_time"] < 2.0
             ), f"Worker {result['worker_id']} queries too slow: {result['mean_time']:.2f}s"
 
-        return {
-            "total_time": total_time,
-            "worker_results": worker_results,
-            "total_queries": num_workers * queries_per_worker,
-        }
-
 
 @pytest.mark.slow
 class TestScalability:
@@ -340,10 +321,3 @@ class TestScalability:
 
         assert len(results.results) == 20
         assert query_time < 2.0, f"Large dataset query too slow: {query_time:.2f}s"
-
-        return {
-            "doc_count": len(large_docs),
-            "processing_time": processing_time,
-            "query_time": query_time,
-            "embeddings_shape": index.embeddings.shape,
-        }

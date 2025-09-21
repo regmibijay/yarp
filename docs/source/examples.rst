@@ -11,6 +11,7 @@ Building a simple document search system:
 .. code-block:: python
 
     from yarp.vector_index import LocalMemoryIndex
+    from yarp.exceptions.runtime import EmbeddingProviderNotFoundException
     import json
 
     # Load documents from a JSON file
@@ -43,11 +44,13 @@ Building a simple document search system:
 
     # Usage
     documents = load_documents('my_documents.json')
-    searcher = DocumentSearcher(documents)
-    
-    results = searcher.search("machine learning algorithms")
-    for doc, score in results:
-        print(f"[{score:.1f}] {doc[:100]}...")
+    try:
+        searcher = DocumentSearcher(documents)
+        results = searcher.search("machine learning algorithms")
+        for doc, score in results:
+            print(f"[{score:.1f}] {doc[:100]}...")
+    except EmbeddingProviderNotFoundException as e:
+        print(f"Missing dependency: {e}")
 
 FAQ System
 ----------

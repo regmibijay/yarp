@@ -17,10 +17,34 @@
 
 ## 📦 Installation
 
+
 ### Standard Installation
+
+> Default installation does not automatically install `sentence-transformers`. Please install `python-yarp[cpu]` or `python-yarp[gpu]` depending on acceleration type.
 
 ```bash
 uv add python-yarp
+```
+
+Or with pip:
+
+```bash
+pip install python-yarp
+```
+
+
+### GPU Support
+
+To enable GPU acceleration and install GPU-specific dependencies (PyTorch and sentence-transformers):
+
+```bash
+uv add python-yarp[gpu]
+```
+
+Or with pip:
+
+```bash
+pip install 'python-yarp[gpu]'
 ```
 
 ### CPU-Only Installation (Recommended for systems without GPU)
@@ -29,6 +53,12 @@ For a leaner installation that installs PyTorch CPU-only wheel without NVIDIA CU
 
 ```bash
 uv add python-yarp[cpu]
+```
+
+Or with pip:
+
+```bash
+pip install 'python-yarp[cpu]'
 ```
 
 This option is ideal for:
