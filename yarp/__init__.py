@@ -6,6 +6,6 @@ Neighbors.
 """
 from yarp.runtime.preflight_checks import check_required_packages
 
-check_required_packages()
 
 __version__ = "0.3.1"
+check_required_packages()
