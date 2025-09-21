@@ -9,7 +9,7 @@ This project uses Sphinx to generate comprehensive API documentation from docstr
 Install documentation dependencies:
 
 ```bash
-uv sync --group docs
+uv sync --extra docs
 ```
 
 ### Quick Start
