@@ -1,6 +1,6 @@
 [project]
 name = "python-yarp"
-version = "0.2.1"
+version = "0.3.1"
 description = "Yet Another RAG Pipeline(YARP) with strong focus on In Memory Vector DB with ANN"
 readme = "README.md"
 requires-python = ">=3.12"
@@ -9,18 +9,21 @@ authors = [
 ]
 dependencies = [
     "markupsafe==2.1.5",
-    "torch>=2.8.0",
     "annoy>=1.17.3",
     "levenshtein>=0.27.1",
     "numpy<=1.26.4",
     "pydantic>=2.11.9",
-    "sentence-transformers>=5.1.0",
 ]
 
 [project.optional-dependencies]
 cpu = [
     "torch==2.8.0+cpu; platform_machine != 'arm64' and platform_system != 'Darwin'",
-    "torch==2.8.0; platform_machine == 'arm64' or platform_system == 'Darwin'"
+    "torch==2.8.0; platform_machine == 'arm64' or platform_system == 'Darwin'",
+    "sentence-transformers>=5.1.0"
+]
+gpu = [
+    "torch>=2.8.0",
+    "sentence-transformers>=5.1.0"
 ]
 docs = [
     "sphinx>=7.1.0",

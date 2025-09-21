@@ -266,7 +266,7 @@ def compare_search_results(
     return True
 
 
-class TestDataManager:
+class DataManager:
     """Utility class for managing test data and cleanup."""
 
     def __init__(self):

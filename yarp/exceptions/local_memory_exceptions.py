@@ -5,20 +5,10 @@ This module defines specific exception types that can be raised during
 vector index operations, providing clear error messages and appropriate
 exception hierarchy.
 """
+from yarp.exceptions.base import YarpBaseException
 
 
-class BaseLocalMemoryError(Exception):
-    """
-    Base exception class for all local memory operations.
-
-    This serves as the parent class for all YARP-specific exceptions,
-    allowing users to catch all YARP errors with a single except clause.
-    """
-
-    ...
-
-
-class LocalMemoryTreeNotBuildException(BaseLocalMemoryError):
+class LocalMemoryTreeNotBuildException(YarpBaseException):
     """
     Raised when attempting to use an index that hasn't been built yet.
 
@@ -36,7 +26,7 @@ class LocalMemoryTreeNotBuildException(BaseLocalMemoryError):
     ...
 
 
-class LocalMemoryBadRequestException(BaseLocalMemoryError):
+class LocalMemoryBadRequestException(YarpBaseException):
     """
     Raised when invalid parameters are provided to index operations.
 
@@ -54,7 +44,7 @@ class LocalMemoryBadRequestException(BaseLocalMemoryError):
 
 
 __all__ = [
-    "BaseLocalMemoryError",
+    "YarpBaseException",
     "LocalMemoryBadRequestException",
     "LocalMemoryTreeNotBuildException",
 ]

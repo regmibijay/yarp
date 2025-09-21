@@ -50,11 +50,28 @@ Features
 Installation
 ------------
 
+
 Install YARP using uv:
 
 .. code-block:: bash
 
     uv add python-yarp
+
+For GPU support:
+
+.. code-block:: bash
+
+    uv add python-yarp[gpu]
+
+For CPU-only environments:
+
+.. code-block:: bash
+
+    uv add python-yarp[cpu]
+
+See :doc:`installation` for full details and troubleshooting.
+
+YARP now performs preflight checks for required packages at import time. If a required package is missing, you will see a clear error message.
 
 API Reference
 =============
