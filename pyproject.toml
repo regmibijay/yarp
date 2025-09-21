@@ -17,7 +17,7 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/regmibijay/yarp"
-Documentation = "https://github.io/regmibijay/yarp"
+Documentation = "https://regmibijay.github.io/yarp"
 Repository = "https://github.com/regmibijay/yarp"
 "Author Blog" = "https://blog.regmi.dev"
 
