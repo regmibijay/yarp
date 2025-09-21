@@ -50,11 +50,11 @@ Features
 Installation
 ------------
 
-Install YARP using pip:
+Install YARP using uv:
 
 .. code-block:: bash
 
-    pip install python-yarp
+    uv add python-yarp
 
 API Reference
 =============

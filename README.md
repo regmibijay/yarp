@@ -17,16 +17,32 @@
 
 ## 📦 Installation
 
+### Standard Installation
+
 ```bash
-pip install python-yarp
+uv add python-yarp
 ```
+
+### CPU-Only Installation (Recommended for systems without GPU)
+
+For a leaner installation that installs PyTorch CPU-only wheel without NVIDIA CUDA dependencies:
+
+```bash
+uv add python-yarp[cpu]
+```
+
+This option is ideal for:
+- CPU-only environments
+- Docker containers without GPU support
+- Systems where you want to minimize package size
+- Development environments that don't require GPU acceleration
 
 ### Development Installation
 
 ```bash
 git clone https://github.com/regmibijay/yarp.git
 cd yarp
-pip install -e .
+uv sync --dev
 ```
 
 ## 🔧 Quick Start
@@ -293,13 +309,16 @@ git clone https://github.com/regmibijay/yarp.git
 cd yarp
 
 # Install in development mode with dev dependencies
-pip install -e ".[dev]"
+uv sync --dev
+
+# For CPU-only development environments (optional)
+# uv sync --dev --group cpu
 
 # Install pre-commit hooks
-pre-commit install
+uv run pre-commit install
 
 # Run tests
-pytest
+uv run pytest
 ```
 
 ## 📄 License
