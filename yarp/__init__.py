@@ -7,7 +7,7 @@ Neighbors.
 from yarp.runtime.preflight_checks import check_required_packages
 
 
-__version__ = "0.3.2"
+__version__ = "0.3.3"
 
 # Perform preflight checks when the package is imported
 # these checks ensure that all required packages are installed
